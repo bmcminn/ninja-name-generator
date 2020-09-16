@@ -52,7 +52,10 @@
             <input type="text" v-model="name">
 
             <div>
-                <p v-if="name.length > 0" class="title-case">{{ translateName(name) }}</p>
+                <p v-if="name.length > 0" class="title-case">
+                    {{ translateName(name) }}
+                    <button type="button" @click="doCopy">Copy!</button>
+                </p>
                 <p v-else class="title-case muted">Enter your name!</p>
             </div>
 
@@ -69,6 +72,7 @@
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.12/vue.min.js" integrity="sha512-BKbSR+cfyxLdMAsE0naLReFSLg8/pjbgfxHh/k/kUC82Hy7r6HtR5hLhobaln2gcTvzkyyehrdREdjpsQwy2Jw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-clipboard2/0.3.1/vue-clipboard.min.js" integrity="sha512-zNpg4bcFZvamz8fgq5nf9CMLlMdsT2Jy6Bb1tUOPtUCRTZuKnHa1I7yYWW2EOT16CgXohsx6gNnTNpKZpqJzSQ==" crossorigin="anonymous"></script>
     <script>
 
         const letters = {
@@ -108,7 +112,16 @@
             methods: {
                 translateName: function(name) {
                     return name.split('').map(el => letters[el.toLowerCase()] ? letters[el.toLowerCase()] : el).join('')
-                }
+                },
+                doCopy: function () {
+                    this.$copyText(this.translateName(this.name)).then(function (e) {
+                        alert('Copied')
+                        console.log(e)
+                    }, function (e) {
+                        alert('Can not copy')
+                        console.log(e)
+                    })
+                },
             }
         })
 
