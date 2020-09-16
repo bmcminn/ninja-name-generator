@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ninja Name Generator</title>
+
+    <style>
+        html {
+            font-family: sans-serif;
+        }
+        .text-center { text-align: center }
+        .title-case { text-transform: capitalize; }
+
+        #app { 
+            margin: 2em auto
+        }
+
+        input {
+            padding: 0.5em;
+            border-radius: 0.2em
+        }
+        img { 
+            max-width: 100%;
+            width: auto;
+            height: auto;
+        }
+        .muted { color: #747474; }
+        figcaption {
+            font-style: italic;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="text-center">
+
+        <h1>Your Ninja Name Generator</h1>
+
+        <main id="app">
+            <input type="text" v-model="name">
+
+            <div>
+                <p v-if="name.length > 0" class="title-case">{{ translateName(name) }}</p>
+                <p v-else class="title-case muted">Enter your name!</p>
+            </div>
+
+        </main>
+
+        <figure>
+            <img src="your-ninja-name-key.webp" alt="" width="512" height="415" style="width: 250px; " />
+            <figcaption class="muted">Ninja name key by <a href="https://www.reddit.com/r/funny/comments/gi3sc/this_is_how_to_find_your_ninja_name/">u/hauntedmango</a></figcaption>
+        </figure>
+
+
+        <p>Ninja Name Generator made by <a href="https://github.com/bmcminn/ninja-name-generator">@bmcminn</a></p>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.12/vue.min.js" integrity="sha512-BKbSR+cfyxLdMAsE0naLReFSLg8/pjbgfxHh/k/kUC82Hy7r6HtR5hLhobaln2gcTvzkyyehrdREdjpsQwy2Jw==" crossorigin="anonymous"></script>
+    <script>
+
+        const letters = {
+            a: 'ka',
+            b: 'zu',
+            c: 'mi',
+            d: 'te',
+            e: 'ku',
+            f: 'lu',
+            g: 'ji',
+            h: 'ri',
+            i: 'ki',
+            j: 'zu',
+            k: 'me',
+            l: 'ta',
+            m: 'rin',
+            n: 'to',
+            o: 'mo',
+            p: 'no',
+            q: 'ke',
+            r: 'shi',
+            s: 'ari',
+            t: 'chi',
+            u: 'do',
+            v: 'ru',
+            w: 'mei',
+            x: 'na',
+            y: 'fu',
+            z: 'zi',
+        }
+
+        const app = new Vue({
+            el: '#app',
+            data: {
+                name: '',
+            },
+            methods: {
+                translateName: function(name) {
+                    return name.split('').map(el => letters[el.toLowerCase()] ? letters[el.toLowerCase()] : el).join('')
+                }
+            }
+        })
+
+
+
+
+    </script>
+
+</body>
+</html>
+
+
+
+
