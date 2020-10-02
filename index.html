@@ -39,6 +39,7 @@
         figcaption {
             font-style: italic;
         }
+        .mt-3 { margin-top: 3em }
     </style>
 
 </head>
@@ -46,28 +47,37 @@
 
     <div class="text-center">
 
-        <h1>Your Ninja Name Generator</h1>
-
+        <noscript>This app does not work without JavaScript. Enable it in your browser and refresh if you wish to use this site!</noscript>
+        
         <main id="app">
+            <h1>Your {{ generator.name }}</h1>
+
+            <p v-if="generator.description">{{ generator.description }}</p>
+
             <input type="text" v-model="name">
 
             <div>
                 <p v-if="name.length > 0" class="title-case">
-                    {{ translateName(name) }}
+                    {{ generator.translate(name) }}
                     <button type="button" @click="doCopy">Copy!</button>
                 </p>
                 <p v-else class="title-case muted">Enter your name!</p>
             </div>
 
+            <figure v-if="generator.image">
+                <img v-bind:src="'assets/'+generator.image.file" alt="" v-bind:width="generator.image.width" v-bind:height="generator.image.height" style="width: 250px; " />
+                <figcaption class="muted">{{ generator.image.tagline }} by <a v-bind:href="generator.image.author.link">{{ generator.image.author.name}}</a></figcaption>
+            </figure>
+
+            <p class="mt-3">
+                {{ generator.name }} is MIT licensened and is made by 
+                <a v-bind:href="generator.author.link">{{ generator.author.name }}</a>
+            </p>
+
         </main>
 
-        <figure>
-            <img src="your-ninja-name-key.webp" alt="" width="512" height="415" style="width: 250px; " />
-            <figcaption class="muted">Ninja name key by <a href="https://www.reddit.com/r/funny/comments/gi3sc/this_is_how_to_find_your_ninja_name/">u/hauntedmango</a></figcaption>
-        </figure>
 
 
-        <p>Ninja Name Generator made by <a href="https://github.com/bmcminn/ninja-name-generator">@bmcminn</a></p>
     </div>
 
 
@@ -75,52 +85,153 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-clipboard2/0.3.1/vue-clipboard.min.js" integrity="sha512-zNpg4bcFZvamz8fgq5nf9CMLlMdsT2Jy6Bb1tUOPtUCRTZuKnHa1I7yYWW2EOT16CgXohsx6gNnTNpKZpqJzSQ==" crossorigin="anonymous"></script>
     <script>
 
-        const letters = {
-            a: 'ka',
-            b: 'zu',
-            c: 'mi',
-            d: 'te',
-            e: 'ku',
-            f: 'lu',
-            g: 'ji',
-            h: 'ri',
-            i: 'ki',
-            j: 'zu',
-            k: 'me',
-            l: 'ta',
-            m: 'rin',
-            n: 'to',
-            o: 'mo',
-            p: 'no',
-            q: 'ke',
-            r: 'shi',
-            s: 'ari',
-            t: 'chi',
-            u: 'do',
-            v: 'ru',
-            w: 'mei',
-            x: 'na',
-            y: 'fu',
-            z: 'zi',
+        function getQueryProperty(property) {
+            let query = window.location.search.substring(1);
+            let vars = query.split('&');
+            for (let i = 0; i < vars.length; i++) {
+                let [ key, value ] = vars[i].split('=');
+                if (decodeURIComponent(key.trim()) == property) {
+                    return decodeURIComponent(value);
+                }
+            }
+            console.log('Query property %s not found', property);
         }
+
+        function randomNumber(min, max) {  
+            return Math.random() * (max - min) + min; 
+        }  
+
+        function randomNumberInt(min, max) {  
+            return Math.floor(Math.random() * (max - min) + min); 
+        }  
+
+
+
+        const Generators = {
+            ninja: {
+                name: 'Ninja Name Generator',
+                author: {
+                    name: '@bmcminn',
+                    link: 'https://github.com/bmcminn/name-generator',
+                },
+                image: {
+                    file: 'your-ninja-name-key.webp',
+                    width: 512,
+                    height: 415,
+                    tagline: 'Ninja name key by',
+                    author: {
+                        name: 'u/hauntedmango',
+                        link: 'https://www.reddit.com/r/funny/comments/gi3sc/this_is_how_to_find_your_ninja_name/',
+                    },
+                },
+
+                translate(name) {
+                    const letters = {
+                        a: 'ka',
+                        b: 'zu',
+                        c: 'mi',
+                        d: 'te',
+                        e: 'ku',
+                        f: 'lu',
+                        g: 'ji',
+                        h: 'ri',
+                        i: 'ki',
+                        j: 'zu',
+                        k: 'me',
+                        l: 'ta',
+                        m: 'rin',
+                        n: 'to',
+                        o: 'mo',
+                        p: 'no',
+                        q: 'ke',
+                        r: 'shi',
+                        s: 'ari',
+                        t: 'chi',
+                        u: 'do',
+                        v: 'ru',
+                        w: 'mei',
+                        x: 'na',
+                        y: 'fu',
+                        z: 'zi',
+                    }
+
+                    return name.split('')
+                                .map(el => letters[el.toLowerCase()] ? letters[el.toLowerCase()] : el)
+                                .join('')
+                },    
+            },
+
+            fuck: {
+                name: 'Fuck Name Generator',
+                description: 'Replaces the first four letters of each of your names with "Fuck"',
+                author: {
+                    name: '@bmcminn',
+                    link: 'https://github.com/bmcminn/name-generator',
+                },
+                // image: {
+                //     file: 'your-ninja-name-key.webp',
+                //     width: 512,
+                //     height: 415,
+                //     tagline: 'Ninja name key by',
+                //     author: {
+                //         name: 'u/hauntedmango',
+                //         link: 'https://www.reddit.com/r/funny/comments/gi3sc/this_is_how_to_find_your_ninja_name/',
+                //     },
+                // },
+                translate(name) {
+                    let replacement = 'Fuck'
+                    return name.split(' ').map(el => {
+                        return el.substring(replacement.length).replace(/^/, replacement)
+                    }).join(' ')
+                },
+            },
+        }
+
 
         const app = new Vue({
             el: '#app',
             data: {
                 name: '',
+                generator: null,
             },
+            
+            created() {
+                let generator = getQueryProperty('generator')
+
+                console.debug('generator', generator)
+
+                if (!generator || !Generators[generator]) {
+                    generator = this.getRandomGenerator()
+                }
+
+                this.generator = Generators[generator]
+                console.debug('generator', this.generator)
+            },
+
             methods: {
-                translateName: function(name) {
-                    return name.split('').map(el => letters[el.toLowerCase()] ? letters[el.toLowerCase()] : el).join('')
+
+                getRandomGenerator() {
+                    let gens = Object.keys(Generators)
+                    console.debug('gens', gens)
+                    let randomInt = randomNumberInt(0, gens.length)
+                    console.debug('randomInt', randomInt)
+                    let generator = gens[randomInt]
+                    console.debug('generator', generator)
+                    
+                    console.log(generator)
+
+                    return generator
                 },
-                doCopy: function () {
-                    this.$copyText(this.translateName(this.name)).then(function (e) {
-                        alert('Copied')
-                        console.log(e)
-                    }, function (e) {
-                        alert('Can not copy')
-                        console.log(e)
-                    })
+
+                doCopy() {
+                    this.$copyText(this.generator.translate(this.name))
+                        .then(function (e) {
+                            alert('Copied')
+                            console.log(e)
+                        }, function (e) {
+                            alert('Can not copy')
+                            console.log(e)
+                        })
                 },
             }
         })
