@@ -39,7 +39,13 @@
         figcaption {
             font-style: italic;
         }
-        .mt-3 { margin-top: 3em }
+        .mt-1 { margin-top: 1em }
+        .mt-3 { margin-top: 2em }
+        .mt-2 { margin-top: 3em }
+        .generator-menu {
+            background-color: #f0f0f0;
+            padding: 1em 1em 1em;
+        }
     </style>
 
 </head>
@@ -68,6 +74,21 @@
                 <img v-bind:src="'assets/'+generator.image.file" alt="" v-bind:width="generator.image.width" v-bind:height="generator.image.height" style="width: 250px; " />
                 <figcaption class="muted">{{ generator.image.tagline }} by <a v-bind:href="generator.image.author.link">{{ generator.image.author.name}}</a></figcaption>
             </figure>
+
+
+            
+            <div class="mt-3 generator-menu">
+                <div>Checkout out other Name Generators!</div>
+                <select class="mt-1" name="generator-switch" id="generator-switch" v-model="generator"
+                @change="switchApp"
+                >
+                    <option disabled value="">Pick a name generator!</option>
+                    <option v-for="(item, key) in Generators" :key="item.name" :value="key">
+                        {{ item.name }}
+                    </option>
+                </select>
+            </div>
+
 
             <p class="mt-3">
                 {{ generator.name }} is MIT licensened and is made by 
@@ -193,6 +214,7 @@
             data: {
                 name: '',
                 generator: null,
+
             },
             
             created() {
@@ -233,6 +255,10 @@
                             console.log(e)
                         })
                 },
+
+                switchApp(e) {
+                    window.location.search = `generator=${e.target.value}` 
+                }
             }
         })
 
