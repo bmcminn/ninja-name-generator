@@ -22,7 +22,7 @@
         .text-center { text-align: center }
         .title-case { text-transform: capitalize; }
 
-        #app { 
+        #app {
             margin: 2em auto
         }
 
@@ -30,7 +30,7 @@
             padding: 0.5em;
             border-radius: 0.2em
         }
-        img { 
+        img {
             max-width: 100%;
             width: auto;
             height: auto;
@@ -54,7 +54,7 @@
     <div class="text-center">
 
         <noscript>This app does not work without JavaScript. Enable it in your browser and refresh if you wish to use this site!</noscript>
-        
+
         <main id="app">
             <h1>Your {{ generator.name }}</h1>
 
@@ -76,7 +76,7 @@
             </figure>
 
 
-            
+
             <div class="mt-3 generator-menu">
                 <div>Checkout out other Name Generators!</div>
                 <select class="mt-1" name="generator-switch" id="generator-switch" v-model="generator"
@@ -91,7 +91,7 @@
 
 
             <p class="mt-3">
-                {{ generator.name }} is MIT licensened and is made by 
+                {{ generator.name }} is MIT licensened and is made by
                 <a v-bind:href="generator.author.link">{{ generator.author.name }}</a>
             </p>
 
@@ -106,6 +106,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-clipboard2/0.3.1/vue-clipboard.min.js" integrity="sha512-zNpg4bcFZvamz8fgq5nf9CMLlMdsT2Jy6Bb1tUOPtUCRTZuKnHa1I7yYWW2EOT16CgXohsx6gNnTNpKZpqJzSQ==" crossorigin="anonymous"></script>
     <script>
 
+        /**
+         * [getQueryProperty description]
+         * @sauce  https://stackoverflow.com/a/2091331/3708807
+         * @param  {[type]} property [description]
+         * @return {[type]}          [description]
+         */
         function getQueryProperty(property) {
             let query = window.location.search.substring(1);
             let vars = query.split('&');
@@ -118,13 +124,27 @@
             console.log('Query property %s not found', property);
         }
 
-        function randomNumber(min, max) {  
-            return Math.random() * (max - min) + min; 
-        }  
+        /**
+         * [randomNumber description]
+         * @sauce  https://www.geeksforgeeks.org/how-to-generate-random-number-in-given-range-using-javascript/
+         * @param  {[type]} min [description]
+         * @param  {[type]} max [description]
+         * @return {[type]}     [description]
+         */
+        function randomNumber(min, max) {
+            return Math.random() * (max - min) + min;
+        }
 
-        function randomNumberInt(min, max) {  
-            return Math.floor(Math.random() * (max - min) + min); 
-        }  
+
+        /**
+         * [randomNumberInt description]
+         * @param  {[type]} min [description]
+         * @param  {[type]} max [description]
+         * @return {[type]}     [description]
+         */
+        function randomNumberInt(min, max) {
+            return Math.floor(Math.random() * (max - min) + min);
+        }
 
 
 
@@ -179,7 +199,7 @@
                     return name.split('')
                                 .map(el => letters[el.toLowerCase()] ? letters[el.toLowerCase()] : el)
                                 .join('')
-                },    
+                },
             },
 
             fuck: {
@@ -216,7 +236,7 @@
                 generator: null,
 
             },
-            
+
             created() {
                 let generator = getQueryProperty('generator')
 
@@ -228,6 +248,8 @@
 
                 this.generator = Generators[generator]
                 console.debug('generator', this.generator)
+
+                document.title = this.generator.name
             },
 
             methods: {
@@ -239,7 +261,7 @@
                     console.debug('randomInt', randomInt)
                     let generator = gens[randomInt]
                     console.debug('generator', generator)
-                    
+
                     console.log(generator)
 
                     return generator
@@ -257,7 +279,7 @@
                 },
 
                 switchApp(e) {
-                    window.location.search = `generator=${e.target.value}` 
+                    window.location.search = `generator=${e.target.value}`
                 }
             }
         })
