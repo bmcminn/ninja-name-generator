@@ -46,6 +46,12 @@
             background-color: #f0f0f0;
             padding: 1em 1em 1em;
         }
+        .columns {
+            display: flex;
+            justify-content: space-around;
+            margin: auto;
+            max-width: 600px;
+        }
     </style>
 
 </head>
@@ -60,19 +66,39 @@
 
             <p v-if="generator.description">{{ generator.description }}</p>
 
-            <input type="text" v-model="name">
 
-            <div>
-                <p v-if="name.length > 0" class="title-case">
-                    {{ generator.translate(name) }}
-                    <button type="button" @click="doCopy">Copy!</button>
-                </p>
-                <p v-else class="title-case muted">Enter your name!</p>
+            <div class="columns">
+                <div v-if="generator.to">
+                    <input type="text" v-model="name" v-bind:placeholder="generator.toPlaceholder">
+
+                    <p v-if="name.length > 0" class="title-case">
+                        {{ generator.to(name) }}
+                        <button type="button" @click="doCopy('to')">Copy!</button>
+                    </p>
+                    <p v-else class="title-case muted">{{ generator.toDescription }}</p>
+                </div>
+
+                <div v-if="generator.from">
+                    <input type="text" v-model="parse" v-bind:placeholder="generator.fromPlaceholder">
+
+                    <p v-if="parse.length > 0" class="title-case">
+                        {{ generator.from(parse) }}
+                        <button type="button" @click="doCopy('from')">Copy!</button>
+                    </p>
+                    <p v-else class="title-case muted">{{ generator.fromDescription }}</p>
+                </div>
             </div>
 
             <figure v-if="generator.image">
                 <img v-bind:src="'assets/'+generator.image.file" alt="" v-bind:width="generator.image.width" v-bind:height="generator.image.height" style="width: 250px; " />
-                <figcaption class="muted">{{ generator.image.tagline }} by <a v-bind:href="generator.image.author.link">{{ generator.image.author.name}}</a></figcaption>
+                <figcaption class="muted">
+                    {{ generator.image.tagline }}
+                    <span v-if="generator.image.author">
+                        by
+                        <a v-if="generator.image.author.name" v-bind:href="generator.image.author.link">{{ generator.image.author.name}}</a>
+                        <span v-else>{{ generator.image.author.name}}</span>
+                    </span>
+                </figcaption>
             </figure>
 
 
@@ -107,12 +133,12 @@
     <script>
 
         /**
-         * [getQueryProperty description]
+         * [getQueryParameter description]
          * @sauce  https://stackoverflow.com/a/2091331/3708807
          * @param  {[type]} property [description]
          * @return {[type]}          [description]
          */
-        function getQueryProperty(property) {
+        function getQueryParameter(property) {
             let query = window.location.search.substring(1);
             let vars = query.split('&');
             for (let i = 0; i < vars.length; i++) {
@@ -166,7 +192,9 @@
                     },
                 },
 
-                translate(name) {
+                toDescription: 'Enter your name!',
+
+                to(name) {
                     const letters = {
                         a: 'ka',
                         b: 'zu',
@@ -205,6 +233,7 @@
             fuck: {
                 name: 'Fuck Name Generator',
                 description: 'Replaces the first four letters of each of your names with "Fuck"',
+                toDescription: 'Enter your name!',
                 author: {
                     name: '@bmcminn',
                     link: 'https://github.com/bmcminn/ninja-name-generator',
@@ -219,13 +248,150 @@
                 //         link: 'https://www.reddit.com/r/funny/comments/gi3sc/this_is_how_to_find_your_ninja_name/',
                 //     },
                 // },
-                translate(name) {
+                to(name) {
                     let replacement = 'Fuck'
                     return name.split(' ').map(el => {
                         return el.substring(replacement.length).replace(/^/, replacement)
                     }).join(' ')
                 },
             },
+
+            oob: {
+                name: '"Oob" Name Generator',
+                description: 'Replaces each vowel in your name with "oob"',
+
+                toDescription: 'Enter your name!',
+
+                author: {
+                    name: '@bmcminn',
+                    link: 'https://github.com/bmcminn/ninja-name-generator',
+                },
+                // image: {
+                //     file: 'your-ninja-name-key.webp',
+                //     width: 512,
+                //     height: 415,
+                //     tagline: 'Ninja name key by',
+                //     author: {
+                //         name: 'u/hauntedmango',
+                //         link: 'https://www.reddit.com/r/funny/comments/gi3sc/this_is_how_to_find_your_ninja_name/',
+                //     },
+                // },
+                to(name) {
+                    let replacement = 'oob'
+                    return name.split('').map(el => {
+                        return el.match(/[aeiou]/) ? replacement : el
+                    }).join('')
+                },
+            },
+
+            t9: {
+                name: 'T9 Translator',
+                // description: 'Encodes and parses T9 messages',
+                author: {
+                    name: '@bmcminn',
+                    link: 'https://github.com/bmcminn/name-generator',
+                },
+
+                T9: {
+                    a:'2',
+                    b:'22',
+                    c:'222',
+                    d:'3',
+                    e:'33',
+                    f:'333',
+                    g:'4',
+                    h:'44',
+                    i:'444',
+                    j:'5',
+                    k:'55',
+                    l:'555',
+                    m:'6',
+                    n:'66',
+                    o:'666',
+                    p:'7',
+                    q:'77',
+                    r:'777',
+                    s:'7777',
+                    t:'8',
+                    u:'88',
+                    v:'888',
+                    w:'9',
+                    x:'99',
+                    y:'999',
+                    z:'9999',
+                    2: 'a',
+                    22: 'b',
+                    222: 'c',
+                    3: 'd',
+                    33: 'e',
+                    333: 'f',
+                    4: 'g',
+                    44: 'h',
+                    444: 'i',
+                    5: 'j',
+                    55: 'k',
+                    555: 'l',
+                    6: 'm',
+                    66: 'n',
+                    666: 'o',
+                    7: 'p',
+                    77: 'q',
+                    777: 'r',
+                    7777: 's',
+                    8: 't',
+                    88: 'u',
+                    888: 'v',
+                    9: 'w',
+                    99: 'x',
+                    999: 'y',
+                    9999: 'z',
+                    ' ': ' ',
+                },
+
+
+                image: {
+                    file: 't9-graphic.jpg',
+                    width: 514,
+                    height: 461,
+                    tagline: 'Example T9 keyboard',
+                    // author: {
+                    //     name: 'u/hauntedmango',
+                    //     link: 'https://www.reddit.com/r/funny/comments/gi3sc/this_is_how_to_find_your_ninja_name/',
+                    // },
+                },
+
+                toDescription: 'Encode your message',
+                fromDescription: 'Parse your T9 message',
+                toPlaceholder: 'your message here',
+                fromPlaceholder: '8-999-7-33 44-33-777-33',
+
+                to(str) {
+                    let self = this
+                    let res = str.toLowerCase().split(' ')
+                        .map(word => {
+                            return word.split('')
+                                .map(el => self.T9[el] || el)
+                                .join('-')
+                        })
+                        .join(' ')
+                    return res
+                },
+
+                from(str) {
+                    let self = this
+                    let res = str.split(' ')
+                        .map(word => {
+                            return word.split('-')
+                                .map(el => self.T9[el] || el)
+                                .join('')
+                        })
+                        .join(' ')
+                    return res
+                },
+
+
+
+            }
         }
 
 
@@ -233,12 +399,13 @@
             el: '#app',
             data: {
                 name: '',
+                parse: '',
                 generator: null,
 
             },
 
             created() {
-                let generator = getQueryProperty('generator')
+                let generator = getQueryParameter('generator')
 
                 console.debug('generator', generator)
 
@@ -267,8 +434,8 @@
                     return generator
                 },
 
-                doCopy() {
-                    this.$copyText(this.generator.translate(this.name))
+                doCopy(toFrom='to') {
+                    this.$copyText(this.generator[toFrom](this.name))
                         .then(function (e) {
                             alert('Copied')
                             console.log(e)
