@@ -5,9 +5,10 @@ A simple collection of name generators.
 
 ## Generators
 
+- ["Oob" Name Generator](https://bmcminn.github.io/ninja-name-generator?generator=oob)
 - [Fuck Name Generator](https://bmcminn.github.io/ninja-name-generator?generator=fuck)
 - [Ninja Name Generator](https://bmcminn.github.io/ninja-name-generator?generator=ninja)
-- ["Oob" Name Generator](https://bmcminn.github.io/ninja-name-generator?generator=oob)
+- [Sexy Name Calculator](https://bmcminn.github.io/ninja-name-generator?generator=sexyname)
 - [T9 translator](https://bmcminn.github.io/ninja-name-generator?generator=t9)
 
 

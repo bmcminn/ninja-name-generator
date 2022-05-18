@@ -92,7 +92,7 @@
             <figure v-if="generator.image">
                 <img v-bind:src="'assets/'+generator.image.file" alt="" v-bind:width="generator.image.width" v-bind:height="generator.image.height" style="width: 250px; " />
                 <figcaption class="muted">
-                    {{ generator.image.tagline }}
+                    "{{ generator.image.tagline }}"
                     <span v-if="generator.image.author">
                         by
                         <a v-if="generator.image.author.name" v-bind:href="generator.image.author.link">{{ generator.image.author.name}}</a>
@@ -227,6 +227,69 @@
                     return name.split('')
                                 .map(el => letters[el.toLowerCase()] ? letters[el.toLowerCase()] : el)
                                 .join('')
+                },
+            },
+
+            sexyname: {
+                name: 'How sexy is your name?',
+                author: {
+                    name: '@bmcminn',
+                    link: 'https://github.com/bmcminn/ninja-name-generator',
+                },
+                image: {
+                    file: 'sexyname.jpg',
+                    width: 480,
+                    height: 560,
+                    tagline: 'How sexy is your name',
+                    author: {
+                        name: 'zodiaccity',
+                        // link: 'https://www.reddit.com/r/funny/comments/gi3sc/this_is_how_to_find_your_ninja_name/',
+                    },
+                },
+
+                toDescription: 'Enter your name!',
+
+                to(name) {
+                    const points = {
+                        'a': 100,
+                        'b': 14,
+                        'c': 9,
+                        'd': 28,
+                        'e': 145,
+                        'f': 12,
+                        'g': 3,
+                        'h': 10,
+                        'i': 200,
+                        'j': 100,
+                        'k': 114,
+                        'l': 100,
+                        'm': 25,
+                        'n': 450,
+                        'o': 80,
+                        'p': 2,
+                        'q': 12,
+                        'r': 400,
+                        's': 113,
+                        't': 405,
+                        'u': 11,
+                        'v': 10,
+                        'w': 10,
+                        'x': 3,
+                        'y': 210,
+                        'z': 23,
+                        ' ': 0,
+                    }
+
+                    const score = name.toLowerCase().split('').map(el => points[el]).reduce((a, b) => a + b)
+
+                    let label = 'Not too sexy...'
+
+                    if (60 < score) { label = 'Pretty sexy ;)' }
+                    if (300 < score) { label = 'Very sexy!' }
+                    if (600 < score) { label = 'The Ultimate Sexiest!' }
+
+                    return `${score} ${label}`
+
                 },
             },
 
