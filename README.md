@@ -10,6 +10,7 @@ A simple collection of name generators.
 - [Ninja Name Generator](https://bmcminn.github.io/ninja-name-generator?generator=ninja)
 - [Sexy Name Calculator](https://bmcminn.github.io/ninja-name-generator?generator=sexyname)
 - [T9 translator](https://bmcminn.github.io/ninja-name-generator?generator=t9)
+- [Male Novelist Description Generator](https://bmcminn.github.io/ninja-name-generator?generator=malenovelistdescription)
 
 
 ## Contributing

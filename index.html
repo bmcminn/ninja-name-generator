@@ -62,7 +62,7 @@
         <noscript>This app does not work without JavaScript. Enable it in your browser and refresh if you wish to use this site!</noscript>
 
         <main id="app">
-            <h1>Your {{ generator.name }}</h1>
+            <h1>{{ generator.name }}</h1>
 
             <p v-if="generator.description">{{ generator.description }}</p>
 
@@ -71,26 +71,33 @@
                 <div v-if="generator.to">
                     <input type="text" v-model="name" v-bind:placeholder="generator.toPlaceholder">
 
-                    <p v-if="name.length > 0" class="title-case">
-                        {{ generator.to(name) }}
+                    <p v-if="name.length > 0" :class="[ generator.toCase ]">
+                        {{ toText }}
+                        <!-- {{ generator.to(name) }} -->
                         <button type="button" @click="doCopy('to')">Copy!</button>
                     </p>
                     <p v-else class="title-case muted">{{ generator.toDescription }}</p>
                 </div>
 
-                <div v-if="generator.from">
+                <div v-if="generator.from" :class="[ generator.fromCase ]">
                     <input type="text" v-model="parse" v-bind:placeholder="generator.fromPlaceholder">
 
-                    <p v-if="parse.length > 0" class="title-case">
-                        {{ generator.from(parse) }}
+                    <p v-if="parse.length > 0">
+                        {{ fromText }}
+                        <!-- {{ generator.from(parse) }} -->
                         <button type="button" @click="doCopy('from')">Copy!</button>
                     </p>
                     <p v-else class="title-case muted">{{ generator.fromDescription }}</p>
                 </div>
+
+            </div>
+
+            <div v-if="generator.share !== false">
+                <button type="button" @click="share('to')">Share this result!</button>
             </div>
 
             <figure v-if="generator.image">
-                <img v-bind:src="'assets/'+generator.image.file" alt="" v-bind:width="generator.image.width" v-bind:height="generator.image.height" style="width: 250px; " />
+                <img v-bind:src="'assets/'+generator.image.file" alt="" v-bind:width="generator.image.width" v-bind:height="generator.image.height" :style="{'max-width': '100%' }" />
                 <figcaption class="muted">
                     "{{ generator.image.tagline }}"
                     <span v-if="generator.image.author">
@@ -123,14 +130,17 @@
 
         </main>
 
-
-
     </div>
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.14/vue.min.js" integrity="sha512-XdUZ5nrNkVySQBnnM5vzDqHai823Spoq1W3pJoQwomQja+o4Nw0Ew1ppxo5bhF2vMug6sfibhKWcNJsG8Vj9tg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-clipboard2/0.3.3/vue-clipboard.min.js" integrity="sha512-Zox2uAcIUjsh757teov0Hd1uGNCbmoL5RgnX0N8Vusp/fLe4STA2vsWfm28vrvd83tzlmZhJfa4zTPqlN3sW7A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
+
+        // disable debug statements in "production"
+        if (window.location.href.toLowerCase().includes('github.io')) {
+            console.debug = function(...args) {  }
+        }
 
         /**
          * [getQueryParameter description]
@@ -149,6 +159,7 @@
             }
             console.log('Query property %s not found', property);
         }
+
 
         /**
          * [randomNumber description]
@@ -196,6 +207,8 @@
                 },
             },
 
+            toCase: 'title-case',
+
             LETTERS: {
                 a: 'ka',
                 b: 'zu',
@@ -233,7 +246,7 @@
                 return name.split('')
                     .map(el => {
                         const letter = el.toLowerCase()
-                        self.LETTERS[letter] ? self.LETTERS[letter] : el
+                        return self.LETTERS[letter] ? self.LETTERS[letter] : el
                     })
                     .join('')
             },
@@ -312,10 +325,12 @@
             name: 'Fuck Name Generator',
             description: 'Replaces the first four letters of each of your names with "Fuck"',
             toDescription: 'Enter your name!',
+
             author: {
                 name: '@bmcminn',
                 link: 'https://github.com/bmcminn/ninja-name-generator',
             },
+
             to(name) {
                 let replacement = 'Fuck'
                 return name.split(' ')
@@ -328,10 +343,12 @@
             name: '"Oob" Name Generator',
             description: 'Replaces each vowel in your name with "oob"',
             toDescription: 'Enter your name!',
+
             author: {
                 name: '@bmcminn',
                 link: 'https://github.com/bmcminn/ninja-name-generator',
             },
+
             to(name) {
                 let replacement = 'oob'
                 return name.split('')
@@ -347,6 +364,17 @@
             author: {
                 name: '@bmcminn',
                 link: 'https://github.com/bmcminn/name-generator',
+            },
+
+            image: {
+                file: 't9-graphic.jpg',
+                width: 514,
+                height: 461,
+                tagline: 'Example T9 keyboard',
+                // author: {
+                //     name: 'u/hauntedmango',
+                //     link: 'https://www.reddit.com/r/funny/comments/gi3sc/this_is_how_to_find_your_ninja_name/',
+                // },
             },
 
             T9: {
@@ -405,21 +433,11 @@
                 ' ': ' ',
             },
 
-            image: {
-                file: 't9-graphic.jpg',
-                width: 514,
-                height: 461,
-                tagline: 'Example T9 keyboard',
-                // author: {
-                //     name: 'u/hauntedmango',
-                //     link: 'https://www.reddit.com/r/funny/comments/gi3sc/this_is_how_to_find_your_ninja_name/',
-                // },
-            },
-
             toDescription: 'Encode your message',
-            fromDescription: 'Parse your T9 message',
             toPlaceholder: 'your message here',
+
             fromPlaceholder: '8-999-7-33 44-33-777-33',
+            fromDescription: 'Parse your T9 message',
 
             to(str) {
                 const self = this
@@ -447,12 +465,222 @@
         }
 
 
+        Generators['malenovelistdescription'] = {
+            name: 'Electric Literature\'s Male Novelist Description Generator',
+            description: 'If you\'re not sure how a male author would describe you, use our handy chart',
+
+            author: {
+                name: '@bmcminn',
+                link: 'https://github.com/bmcminn/name-generator',
+            },
+
+            image: {
+                file: 'malenovelist.jpeg',
+                width: Math.floor(1024 * 0.7),
+                height: Math.floor(851 * 0.7),
+                tagline: 'Electric Literature\'s Male Novelist Description Generator',
+                author: {
+                    name: 'Jess Zimmerman and Halimah Marcus',
+                    link: 'https://electricliterature.com/if-youre-not-sure-how-a-male-author-would-describe-you-use-our-handy-chart/',
+                },
+            },
+
+            WORDSETS: [
+                // PART A
+                [
+                    'boobs',
+                    'a bust',
+                    'a butt',
+                    'lips',
+                    'an ass',
+                    'breasts',
+                    'hair',
+                    'eyes',
+                    'a voice',
+                    'curves',
+                    'a rump',
+                    'legs',
+                    'a rear end',
+                    'mammaries',
+                    'jugs',
+                    'calves',
+                    'a badonkadonk',
+                    'gams',
+                    'knockers',
+                    'a complexion',
+                    'a pout',
+                    'hoots',
+                    'a booty',
+                    'cheeks',
+                    'thighs',
+                    'tresses',
+                ],
+                // PART B
+                [
+                    'silken',
+                    'creamy',
+                    'shiny',
+                    'ripe',
+                    'juicy',
+                    'middle-aged',
+                    'rippling',
+                    'wrinkled',
+                    'luscious',
+                    'frigid',
+                    'voluptuous',
+                    'expensive',
+                    'plump',
+                    'bountiful',
+                    'tempestuous',
+                    'withered',
+                    'haughty',
+                    'shrill',
+                    'dewy',
+                    'soft',
+                    'wiry',
+                    'gleaming',
+                    'withholding',
+                    'bulbous',
+                    'brittle',
+                ],
+                // PART C
+                [
+                    'kitten',
+                    'mountain',
+                    'pillow',
+                    'ice cream cone',
+                    'tulip',
+                    'lake',
+                    'fortress',
+                    'lemon',
+                    'popsicle',
+                    'librarian',
+                    'python',
+                    'pony',
+                    'melon',
+                    'bedsheet',
+                    'muffin',
+                    'bunny rabbit',
+                    'fish',
+                    'princess',
+                    'ghost',
+                    'waterfall',
+                    'mango',
+                    'harpy',
+                    'ship',
+                    'nun',
+                    'berry',
+                    'car',
+                ],
+                // PART D
+                [
+                    'longed',
+                    'lusted',
+                    'wished',
+                    'wanted',
+                    'resolved',
+                    'dared',
+                    'detested',
+                    'trembled',
+                    'thirsted',
+                    'expected',
+                    'planned',
+                    'deigned',
+                    'proposed',
+                    'shuddered',
+                    'refused',
+                    'hated',
+                    'scorned',
+                    'dreaded',
+                    'did not care',
+                    'ached',
+                    'intended',
+                    'hungered',
+                    'craved',
+                    'hankered',
+                    'needed',
+                    'pined',
+                ],
+                // PART E
+                [
+                    'ravish',
+                    'climb',
+                    'invade',
+                    'grope',
+                    'marry',
+                    'raw dog it with',
+                    'caress',
+                    'proposition',
+                    'correct',
+                    'emotionally manipulate',
+                    'spar with',
+                    'compliment',
+                    'hire',
+                    'booty call',
+                    'mansplain to',
+                    'insult',
+                    'date',
+                    'teabag',
+                    'ignore',
+                    'fondle',
+                    'worship',
+                    'examine',
+                    'manhandle',
+                    'touch',
+                    'admire',
+                    'demand things from',
+                ],
+            ],
+
+            to(name) {
+                const self = this
+                const max = 5
+
+                // normalize name
+                name = name.toLowerCase().substr(0,max).replace(/[^a-z]/gi, '').split('')
+
+                if (name.length < 5) {
+                    for (var i = name.length; i < max; i++) {
+                        name.push(null)
+                    }
+                }
+
+                const parts = name.map((el, index) => {
+                        if (!el) { return '____' }
+                        const letter = 'abcdefghijklmnopqrstuvwxyz'.indexOf(el)
+                        const word = self.WORDSETS[index][letter]
+                        console.debug({index, el, letter, word})
+                        return word
+                    })
+
+                return `She had ${parts[0]} like a ${parts[1]} ${parts[2]} and I ${parts[3]} to ${parts[4]} her.`
+            },
+
+
+        }
+
+
+
         const app = new Vue({
             el: '#app',
-            data: {
-                name: '',
-                parse: '',
-                generator: null,
+            data() {
+                return {
+                    name: getQueryParameter('name') ?? '',
+                    parse: '',
+                    generator: null,
+                    generatorName: null,
+                }
+            },
+
+            computed: {
+                toText() {
+                    return this.generator.to(this.name)
+                },
+                fromText() {
+                    if (this.generator.from) {
+                        return this.generator.from(this.parse)
+                    }
+                },
             },
 
             created() {
@@ -464,7 +692,12 @@
                     generatorName = this.getRandomGenerator()
                 }
 
+                this.generatorName = generatorName
                 this.generator = Generators[generatorName]
+
+                // this.generator.toCase = 'title-case'
+                // this.generator.fromCase ??= 'title-case'
+
                 console.debug('generator', this.generator)
 
                 document.title = this.generator.name
@@ -489,6 +722,18 @@
                     this.$copyText(this.generator[toFrom](this.name))
                         .then(function (e) {
                             alert('Copied')
+                            console.log(e)
+                        }, function (e) {
+                            alert('Can not copy')
+                            console.log(e)
+                        })
+                },
+
+                share(toFrom='to') {
+                    const value = `${window.location.pathname}?generator=${this.generatorName}&name=${this.name}`
+                    this.$copyText(value)
+                        .then(function (e) {
+                            alert(`Copied ${value}`)
                             console.log(e)
                         }, function (e) {
                             alert('Can not copy')
