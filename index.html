@@ -730,7 +730,15 @@
                 },
 
                 share(toFrom='to') {
-                    const value = `${window.location.pathname}?generator=${this.generatorName}&name=${this.name}`
+                    const value = new URL(window.location.href)
+
+                    if (!this.name) {
+                        alert('you must enter a name before sharing your result')
+                        return
+                    }
+
+                    value.search = `generator=${this.generatorName}&name=${this.name}`
+
                     this.$copyText(value)
                         .then(function (e) {
                             alert(`Copied ${value}`)
