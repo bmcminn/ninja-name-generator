@@ -59,7 +59,10 @@
 
     <div class="text-center">
 
-        <noscript>This app does not work without JavaScript. Enable it in your browser and refresh if you wish to use this site!</noscript>
+        <noscript>
+            This app does not work without JavaScript. Enable it in your browser
+            and refresh if you wish to use this site!
+        </noscript>
 
         <main id="app">
             <h1>{{ generator.name }}</h1>
@@ -252,6 +255,7 @@
             },
         }
 
+
         Generators['sexyname'] = {
             name: 'How sexy is your name?',
 
@@ -318,6 +322,49 @@
 
                 return `${score} ${label}`
             }
+        }
+
+
+        Generators['l337'] = {
+            name: 'b451c l337 Converter',
+            description: 'A basic l337 speak converter.',
+            toDescription: 'Enter your name/phrase!',
+            fromDescription: 'Enter your name/phrase to parse!',
+
+            author: {
+                name: '@bmcminn',
+                link: 'https://github.com/bmcminn/ninja-name-generator',
+            },
+
+            replacements: {
+                'a': 4,
+                'e': 3,
+                'g': 6,
+                'i': 1,
+                'o': 0,
+                's': 5,
+                't': 7,
+
+                4: 'a',
+                3: 'e',
+                6: 'g',
+                1: 'i',
+                0: 'o',
+                5: 's',
+                7: 't',
+            },
+
+            to(str) {
+                return str.split('')
+                    .map(el => this.replacements[el.toLowerCase()] ?? el)
+                    .join('')
+            },
+
+            from(str) {
+                return str.split('')
+                    .map(el => this.replacements[el.toLowerCase()] ?? el)
+                    .join('')
+            },
         }
 
 
