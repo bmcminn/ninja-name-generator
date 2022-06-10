@@ -14,7 +14,6 @@
     <meta property="og:description" content="A simple Ninja name generator based on a popular reddit image">
     <meta property="og:type" content="website">
 
-
     <style>
         html {
             font-family: sans-serif;
@@ -34,6 +33,7 @@
             max-width: 100%;
             width: auto;
             height: auto;
+            border: 1px solid #666;
         }
         .muted { color: #747474; }
         figcaption {
@@ -53,10 +53,8 @@
             max-width: 600px;
         }
     </style>
-
 </head>
 <body>
-
     <div class="text-center">
 
         <noscript>
@@ -68,7 +66,6 @@
             <h1>{{ generator.name }}</h1>
 
             <p v-if="generator.description">{{ generator.description }}</p>
-
 
             <div class="columns">
                 <div v-if="generator.to">
@@ -111,7 +108,9 @@
                 </figcaption>
             </figure>
 
-
+            <div v-if="generator.sauce">
+                More info at <a href="{{ generator.sauce }}">{{ generator.sauce }}</a>
+            </div>
 
             <div class="mt-3 generator-menu">
                 <div>Checkout out other Name Generators!</div>
@@ -125,16 +124,13 @@
                 </select>
             </div>
 
-
             <p v-if="generator.author" class="mt-3">
                 "{{ generator.name }}" is MIT licensened and is made by
                 <a v-bind:href="generator.author.link">{{ generator.author.name }}</a>
             </p>
 
         </main>
-
     </div>
-
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.14/vue.min.js" integrity="sha512-XdUZ5nrNkVySQBnnM5vzDqHai823Spoq1W3pJoQwomQja+o4Nw0Ew1ppxo5bhF2vMug6sfibhKWcNJsG8Vj9tg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-clipboard2/0.3.3/vue-clipboard.min.js" integrity="sha512-Zox2uAcIUjsh757teov0Hd1uGNCbmoL5RgnX0N8Vusp/fLe4STA2vsWfm28vrvd83tzlmZhJfa4zTPqlN3sW7A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -185,7 +181,6 @@
         function randomNumberInt(min, max) {
             return Math.floor(Math.random() * (max - min) + min);
         }
-
 
 
         const Generators = {}
@@ -368,6 +363,93 @@
         }
 
 
+        // Generators['Spongemock'] = {
+        //     name: 'Spongemock text converter',
+        //     description: 'Makes your text look as obnoxious as it sounds.',
+        //     toDescription: 'Enter your phrase!',
+
+        //     author: {
+        //         name: '@bmcminn',
+        //         link: 'https://github.com/bmcminn/ninja-name-generator',
+        //     },
+
+        //     sauce: 'https://knowyourmeme.com/memes/mocking-spongebob',
+
+        //     image: {
+        //         file: 'spongemock.jpg',
+        //         width: 590,
+        //         height: 687,
+        //         tagline: 'Spongemock by',
+        //         author: {
+        //             name: '@TheSpongeMock',
+        //             link: 'https://twitter.com/thespongemock',
+        //         },
+        //     },
+
+        //     to(str) {
+        //         let capCount = 0
+        //         const maxCaps = 2
+
+        //         //  // psuedocode
+        //         //  split by word
+        //         //  for each word, numCaps = Math.floor(word.length / 2)
+        //         //    for each letter in word, if caps < numCaps && iLetter % RandomInt(1,3) === 0
+        //         //      toUpperCase()
+
+        //         return str.split('')
+        //             .map((el, i) => {
+        //                 if (i < 2) { return el }
+        //                 capCount = capCount < maxCaps ? capCount : 0
+
+        //                 console.log({ el, i, capCount, res: capCount < maxCaps })
+
+        //                 // if (capCount < maxCaps && (i % 2 === 0 || i % 3 === 0)) {
+        //                 // if (capCount < maxCaps && (i % randomNumberInt(1,3) === 0)) {
+        //                 if (i % randomNumberInt(1,6) === 0) {
+        //                     capCount += 1
+        //                     return el.toUpperCase()
+        //                 }
+
+        //                 return el.toLowerCase()
+        //             })
+        //             .join('')
+        //     },
+
+        //     // D o n T   u S e   t h A t   W e I r d   S p o N g E b o B   M o C k i n G   M E m e
+        //     // 0                   1                   2                   3                   4
+        //     // 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+        // }
+
+
+        Generators['makingapoint'] = {
+            name: 'Making a point',
+            description: 'Make your point L O U D A N D C L E A R',
+            toDescription: 'Enter your phrase',
+
+            author: {
+                name: '@bmcminn',
+                link: 'https://github.com/bmcminn/ninja-name-generator',
+            },
+
+            sauce: 'https://knowyourmeme.com/memes/mocking-spongebob',
+
+            image: {
+                file: 'timetogetspooky.jpg',
+                width: 642,
+                height: 960,
+                // tagline: 'Spongemock by',
+                // author: {
+                //     name: '@TheSpongeMock',
+                //     link: 'https://twitter.com/thespongemock',
+                // },
+            },
+
+            to(str) {
+                return str.trim().toUpperCase().replace(/[^\w\d\p{L}]/gi, '').split('').join(' ')
+            },
+        }
+
+
         Generators['fuck'] = {
             name: 'Fuck Name Generator',
             description: 'Replaces the first four letters of each of your names with "Fuck"',
@@ -386,6 +468,7 @@
             },
         }
 
+
         Generators['oob'] = {
             name: '"Oob" Name Generator',
             description: 'Replaces each vowel in your name with "oob"',
@@ -403,6 +486,7 @@
                     .join('')
             },
         }
+
 
         Generators['t9'] = {
             name: 'T9 Translator',
@@ -703,10 +787,7 @@
 
                 return `She had ${parts[0]} like a ${parts[1]} ${parts[2]} and I ${parts[3]} to ${parts[4]} her.`
             },
-
-
         }
-
 
 
         const app = new Vue({
@@ -752,7 +833,6 @@
             },
 
             methods: {
-
                 getRandomGenerator() {
                     let gens = Object.keys(Generators)
                     console.debug('gens', gens)
@@ -799,16 +879,10 @@
 
                 switchApp(e) {
                     window.location.search = `generator=${e.target.value}`
-                }
+                },
             }
         })
-
-
     </script>
 
 </body>
 </html>
-
-
-
-
