@@ -156,7 +156,7 @@
                     return decodeURIComponent(value);
                 }
             }
-            console.log('Query property %s not found', property);
+            console.error('Query property %s not found', property);
         }
 
 
@@ -797,8 +797,6 @@
                     if (counter >= name.length) {
                         counter = 0
                     }
-
-                    console.log({ temp, counter })
                 }
 
                 name = temp
@@ -807,7 +805,6 @@
                     if (!el) { return '____' }
                     let letter = LETTERS.indexOf(el)
                     const word = self.WORDSETS[index][letter]
-                    console.debug({index, el, letter, word})
                     return word
                 })
 
@@ -867,7 +864,7 @@
                     let generator = gens[randomInt]
                     console.debug('generator', generator)
 
-                    console.log(generator)
+                    // console.log(generator)
 
                     return generator
                 },
