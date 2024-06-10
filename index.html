@@ -98,7 +98,7 @@
 
             <figure v-if="generator.image">
                 <img v-bind:src="'assets/'+generator.image.file" alt="" v-bind:width="generator.image.width" v-bind:height="generator.image.height" :style="{'max-width': '100%' }" />
-                <figcaption class="muted">
+                <figcaption class="muted" v-if="generator.image.tagline">
                     "{{ generator.image.tagline }}"
                     <span v-if="generator.image.author">
                         by
@@ -167,8 +167,8 @@
          * @param  {[type]} max [description]
          * @return {[type]}     [description]
          */
-        function randomNumber(min, max) {
-            return Math.random() * (max - min) + min;
+        function randomNumber(min, max, inclusive=false) {
+            return Math.random() * (max - min + !!inclusive) + min;
         }
 
 
@@ -178,8 +178,8 @@
          * @param  {[type]} max [description]
          * @return {[type]}     [description]
          */
-        function randomNumberInt(min, max) {
-            return Math.floor(Math.random() * (max - min) + min);
+        function randomNumberInt(min, max, inclusive=false) {
+            return Math.floor(Math.random() * (max - min + !!inclusive) + min);
         }
 
 
@@ -473,6 +473,19 @@
             name: '"Oob" Name Generator',
             description: 'Replaces each vowel in your name with "oob"',
             toDescription: 'Enter your name!',
+
+            // sauce: 'https://knowyourmeme.com/memes/mocking-spongebob',
+
+            image: {
+                file: 'oob-meme.png',
+                width: 516,
+                height: 285,
+                // tagline: 'Spongemock by',
+                // author: {
+                //     name: '@TheSpongeMock',
+                //     link: 'https://twitter.com/thespongemock',
+                // },
+            },
 
             author: {
                 name: '@bmcminn',
@@ -769,21 +782,34 @@
                 const max = 5
 
                 // normalize name
-                name = name.toLowerCase().substr(0,max).replace(/[^a-z]/gi, '').split('')
+                name = name.toLowerCase().replace(/[^a-z]|\s/gi, '').split('')
 
-                if (name.length < 5) {
-                    for (var i = name.length; i < max; i++) {
-                        name.push(null)
+                const LETTERS = 'abcdefghijklmnopqrstuvwxyz'
+
+                let temp = []
+                let counter = 0
+
+                for (var i = 0; i < max; i++) {
+                    temp.push(name[counter])
+
+                    counter += 1
+
+                    if (counter >= name.length) {
+                        counter = 0
                     }
+
+                    console.log({ temp, counter })
                 }
 
+                name = temp
+
                 const parts = name.map((el, index) => {
-                        if (!el) { return '____' }
-                        const letter = 'abcdefghijklmnopqrstuvwxyz'.indexOf(el)
-                        const word = self.WORDSETS[index][letter]
-                        console.debug({index, el, letter, word})
-                        return word
-                    })
+                    if (!el) { return '____' }
+                    let letter = LETTERS.indexOf(el)
+                    const word = self.WORDSETS[index][letter]
+                    console.debug({index, el, letter, word})
+                    return word
+                })
 
                 return `She had ${parts[0]} like a ${parts[1]} ${parts[2]} and I ${parts[3]} to ${parts[4]} her.`
             },
