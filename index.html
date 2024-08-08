@@ -392,7 +392,7 @@
 
                 return str.split('')
                     .map((char, i) => {
-                        if (!/[a-z]/.test(char)) { return char }
+                        if (!/[a-z]/i.test(char)) { return char }
                         char = isCapped ? char.toUpperCase() : char.toLowerCase()
                         isCapped = !isCapped
                         return char
@@ -811,7 +811,6 @@
                 })
 
                 const an = /^[aeiou]/i.test(B.trim()) ? 'an' : 'a'
-
 
                 return `She had ${A} like ${an} ${B} ${C} and I ${D} to ${E} her.`
             },
