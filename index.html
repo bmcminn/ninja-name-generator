@@ -363,62 +363,71 @@
         }
 
 
-        // Generators['Spongemock'] = {
-        //     name: 'Spongemock text converter',
-        //     description: 'Makes your text look as obnoxious as it sounds.',
-        //     toDescription: 'Enter your phrase!',
+        Generators['Spongemock'] = {
+            name: 'Spongemock text converter',
+            description: 'Makes your text look as obnoxious as it sounds.',
+            toDescription: 'Enter your phrase!',
 
-        //     author: {
-        //         name: '@bmcminn',
-        //         link: 'https://github.com/bmcminn/ninja-name-generator',
-        //     },
+            author: {
+                name: '@bmcminn',
+                link: 'https://github.com/bmcminn/ninja-name-generator',
+            },
 
-        //     sauce: 'https://knowyourmeme.com/memes/mocking-spongebob',
+            sauce: 'https://knowyourmeme.com/memes/mocking-spongebob',
 
-        //     image: {
-        //         file: 'spongemock.jpg',
-        //         width: 590,
-        //         height: 687,
-        //         tagline: 'Spongemock by',
-        //         author: {
-        //             name: '@TheSpongeMock',
-        //             link: 'https://twitter.com/thespongemock',
-        //         },
-        //     },
+            image: {
+                file: 'spongemock.jpg',
+                width: 590,
+                height: 687,
+                tagline: 'Spongemock by',
+                author: {
+                    name: '@TheSpongeMock',
+                    link: 'https://twitter.com/thespongemock',
+                },
+            },
 
-        //     to(str) {
-        //         let capCount = 0
-        //         const maxCaps = 2
+            to(str) {
+                let isCapped = false
+                const maxCaps = 2
 
-        //         //  // psuedocode
-        //         //  split by word
-        //         //  for each word, numCaps = Math.floor(word.length / 2)
-        //         //    for each letter in word, if caps < numCaps && iLetter % RandomInt(1,3) === 0
-        //         //      toUpperCase()
+                return str.split('')
+                    .map((char, i) => {
+                        if (!/[a-z]/.test(char)) { return char }
+                        char = isCapped ? char.toUpperCase() : char.toLowerCase()
+                        isCapped = !isCapped
+                        return char
+                    })
+                    .join('')
 
-        //         return str.split('')
-        //             .map((el, i) => {
-        //                 if (i < 2) { return el }
-        //                 capCount = capCount < maxCaps ? capCount : 0
+                //  // psuedocode
+                //  split by word
+                //  for each word, numCaps = Math.floor(word.length / 2)
+                //    for each letter in word, if caps < numCaps && iLetter % RandomInt(1,3) === 0
+                //      toUpperCase()
 
-        //                 console.log({ el, i, capCount, res: capCount < maxCaps })
+                // return str.split('')
+                //     .map((el, i) => {
+                //         if (i < 2) { return el }
+                //         capCount = capCount < maxCaps ? capCount : 0
 
-        //                 // if (capCount < maxCaps && (i % 2 === 0 || i % 3 === 0)) {
-        //                 // if (capCount < maxCaps && (i % randomNumberInt(1,3) === 0)) {
-        //                 if (i % randomNumberInt(1,6) === 0) {
-        //                     capCount += 1
-        //                     return el.toUpperCase()
-        //                 }
+                //         console.log({ el, i, capCount, res: capCount < maxCaps })
 
-        //                 return el.toLowerCase()
-        //             })
-        //             .join('')
-        //     },
+                //         // if (capCount < maxCaps && (i % 2 === 0 || i % 3 === 0)) {
+                //         // if (capCount < maxCaps && (i % randomNumberInt(1,3) === 0)) {
+                //         if (i % randomNumberInt(1,6) === 0) {
+                //             capCount += 1
+                //             return el.toUpperCase()
+                //         }
 
-        //     // D o n T   u S e   t h A t   W e I r d   S p o N g E b o B   M o C k i n G   M E m e
-        //     // 0                   1                   2                   3                   4
-        //     // 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-        // }
+                //         return el.toLowerCase()
+                //     })
+                //     .join('')
+            },
+
+            // D o n T   u S e   t h A t   W e I r d   S p o N g E b o B   M o C k i n G   M E m e
+            // 0                   1                   2                   3                   4
+            // 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+        }
 
 
         Generators['makingapoint'] = {
