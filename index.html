@@ -387,46 +387,26 @@
             },
 
             to(str) {
-                let isCapped = false
-                const maxCaps = 2
+                const CASE_MASK = '100100101001001010011001010010101000101100'
+                let maskCursor = 0
 
-                return str.split('')
-                    .map((char, i) => {
-                        if (!/[a-z]/i.test(char)) { return char }
-                        char = isCapped ? char.toUpperCase() : char.toLowerCase()
-                        isCapped = !isCapped
-                        return char
-                    })
-                    .join('')
+                str = str.split('')
 
-                //  // psuedocode
-                //  split by word
-                //  for each word, numCaps = Math.floor(word.length / 2)
-                //    for each letter in word, if caps < numCaps && iLetter % RandomInt(1,3) === 0
-                //      toUpperCase()
+                for (var i = 0; i <= str.length - 1; i++) {
+                    let char = str[i]
 
-                // return str.split('')
-                //     .map((el, i) => {
-                //         if (i < 2) { return el }
-                //         capCount = capCount < maxCaps ? capCount : 0
+                    if (/[^a-z0-9\s]/i.test(char)) { continue }
 
-                //         console.log({ el, i, capCount, res: capCount < maxCaps })
+                    str[i] = CASE_MASK[maskCursor] === '1'
+                        ? char.toUpperCase()
+                        : char.toLowerCase()
 
-                //         // if (capCount < maxCaps && (i % 2 === 0 || i % 3 === 0)) {
-                //         // if (capCount < maxCaps && (i % randomNumberInt(1,3) === 0)) {
-                //         if (i % randomNumberInt(1,6) === 0) {
-                //             capCount += 1
-                //             return el.toUpperCase()
-                //         }
+                    maskCursor += 1
+                    maskCursor = (maskCursor >= CASE_MASK.length ? 0 : maskCursor)
+                }
 
-                //         return el.toLowerCase()
-                //     })
-                //     .join('')
+                return str.join('')
             },
-
-            // D o n T   u S e   t h A t   W e I r d   S p o N g E b o B   M o C k i n G   M E m e
-            // 0                   1                   2                   3                   4
-            // 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
         }
 
 
