@@ -118,9 +118,11 @@
                 @change="switchApp"
                 >
                     <option disabled value="">Pick a name generator!</option>
-                    <option v-for="(item, key) in Generators" :key="item.name" :value="key">
-                        {{ item.name }}
-                    </option>
+                    <template v-for="(item, key) in Generators" :key="item.name">
+                        <option v-if="!item.disabled" :value="key">
+                            {{ item.name }}
+                        </option>
+                    </template>
                 </select>
             </div>
 
@@ -148,15 +150,18 @@
          * @return {[type]}          [description]
          */
         function getQueryParameter(property) {
-            let query = window.location.search.substring(1);
-            let vars = query.split('&');
-            for (let i = 0; i < vars.length; i++) {
-                let [ key, value ] = vars[i].split('=');
-                if (decodeURIComponent(key.trim()) == property) {
-                    return decodeURIComponent(value);
-                }
-            }
-            console.error('Query property %s not found', property);
+            const url = new URL(window.location)
+            let res = url.searchParams.get(property)
+
+            // let query = window.location.search.substring(1);
+            // let vars = query.split('&');
+            // for (let i = 0; i < vars.length; i++) {
+            //     let [ key, value ] = vars[i].split('=');
+            //     if (decodeURIComponent(key.trim()) == property) {
+            //         return decodeURIComponent(value);
+            //     }
+            // }
+            // console.error('Query property %s not found', property);
         }
 
 
@@ -796,6 +801,118 @@
             },
         }
 
+        Generators['screamcipher'] = {
+
+            disabled: true,
+
+            name: 'Scream Cipher',
+            description: 'Messages consist of all As, with different letters distinguished using diacritics',
+
+            author: {
+                name: '@bmcminn',
+                link: 'https://github.com/bmcminn/name-generator',
+            },
+
+            image: {
+                file: 'xkcd_scream_cipher.png',
+                width: 571,
+                height: 831,
+                tagline: 'AAAAAA A ÃA̧AȂA̦ ǍÅÂÃĀÁȂ AAAAAAA!',
+                author: {
+                    name: 'xkcd',
+                    link: 'https://xkcd.com/3054',
+                },
+            },
+
+
+            cipher: {
+                // TO
+                A: 'A', // A
+                B: 'Ȧ', // A&#775;
+                C: 'Ą', // A&#808; ??? A&#807;
+                D: 'A̱', // A&#817;
+                E: 'Á', // A&#769;
+                F: 'A̮', // A&#814;
+                G: 'A̋', // A&#779;
+                H: 'A̰', // A&#816;
+                I: 'Ả', // A&#777;
+                J: 'A̓', // A&#787;
+                K: 'Ạ', // A&#803;
+                L: 'Ă', // A&#774;
+                M: 'Ǎ', // A&#780;
+                N: 'Â', // A&#770;
+                O: 'Å', // A&#778;
+                P: 'A̯', // A&#815;
+                Q: 'A̤', // A&#804;
+                R: 'Ȃ', // A&#785;
+                S: 'Ã', // A&#771;
+                T: 'Ā', // A&#772;
+                U: 'Ä', // A&#776;
+                V: 'À', // A&#768;
+                W: 'Ȁ', // A&#783;
+                X: 'A̽', // A&#829;
+                Y: 'A̦', // A&#806; ???
+                Z: 'Ⱥ', // A&#570;
+
+                // FROM
+                // A:'A', // A
+                'Ȧ': 'B', // A&#775;
+                'Ą': 'C', // A&#808; ??? A&#807;
+                'A̱': 'D', // A&#817;
+                'Á': 'E', // A&#769;
+                'A̮': 'F', // A&#814;
+                'A̋': 'G', // A&#779;
+                'A̰': 'H', // A&#816;
+                'Ả': 'I', // A&#777;
+                'A̓': 'J', // A&#787;
+                'Ạ': 'K', // A&#803;
+                'Ă': 'L', // A&#774;
+                'Ǎ': 'M', // A&#780;
+                'Â': 'N', // A&#770;
+                'Å': 'O', // A&#778;
+                'A̯': 'P', // A&#815;
+                'A̤': 'Q', // A&#804;
+                'Ȃ': 'R', // A&#785;
+                'Ã': 'S', // A&#771;
+                'Ā': 'T', // A&#772;
+                'Ä': 'U', // A&#776;
+                'À': 'V', // A&#768;
+                'Ȁ': 'W', // A&#783;
+                'A̽': 'X', // A&#829;
+                'A̦': 'Y', // A&#806; ???
+                'Ⱥ': 'Z', // A&#570;
+            },
+
+            toDescription: 'Encode your message',
+            toPlaceholder: 'your message here',
+
+            fromPlaceholder: 'AAAAAA A ÃA̧AȂA̦ ǍÅÂÃĀÁȂ AAAAAAA!',
+            fromDescription: 'Parse your Scream here',
+
+            to(str) {
+                const self = this
+                let res = str.toUpperCase().split('')
+                    .map(el => self.cipher[el] || el)
+                    .join('')
+                return res
+            },
+
+            from(str) {
+                const self = this
+                let res = str
+                    .replace(/([\-|_\(\)\[\]\{\}\\\/\?\.\,\<\>\'\;\:\"\!\\@\#\$\%\^\|\&\*')])/gi, '$1$1')
+                    // .replace(//gi, '')
+                    .split('')
+                    .map(el => {
+                        console.log(el, el.length)
+                        console.log('parse', el)
+                        return self.cipher[el] || el
+                    })
+                    .join('')
+                return res
+            },
+        }
+
 
         const app = new Vue({
             el: '#app',
@@ -822,7 +939,7 @@
             created() {
                 let generatorName = getQueryParameter('generator')
 
-                console.debug('generator', generatorName)
+                // console.debug('generator', generatorName)
 
                 if (!generatorName || !Generators[generatorName]) {
                     generatorName = this.getRandomGenerator()
@@ -834,7 +951,7 @@
                 // this.generator.toCase = 'title-case'
                 // this.generator.fromCase ??= 'title-case'
 
-                console.debug('generator', this.generator)
+                // console.debug('generator', this.generator)
 
                 document.title = this.generator.name
             },
@@ -842,11 +959,11 @@
             methods: {
                 getRandomGenerator() {
                     let gens = Object.keys(Generators)
-                    console.debug('gens', gens)
+                    // console.debug('gens', gens)
                     let randomInt = randomNumberInt(0, gens.length)
-                    console.debug('randomInt', randomInt)
+                    // console.debug('randomInt', randomInt)
                     let generator = gens[randomInt]
-                    console.debug('generator', generator)
+                    // console.debug('generator', generator)
 
                     // console.log(generator)
 
