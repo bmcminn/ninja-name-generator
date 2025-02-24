@@ -151,7 +151,7 @@
          */
         function getQueryParameter(property) {
             const url = new URL(window.location)
-            let res = url.searchParams.get(property)
+            return res = url.searchParams.get(property)
 
             // let query = window.location.search.substring(1);
             // let vars = query.split('&');
@@ -897,20 +897,20 @@
                 return res
             },
 
-            from(str) {
-                const self = this
-                let res = str
-                    .replace(/([\-|_\(\)\[\]\{\}\\\/\?\.\,\<\>\'\;\:\"\!\\@\#\$\%\^\|\&\*')])/gi, '$1$1')
-                    // .replace(//gi, '')
-                    .split('')
-                    .map(el => {
-                        console.log(el, el.length)
-                        console.log('parse', el)
-                        return self.cipher[el] || el
-                    })
-                    .join('')
-                return res
-            },
+            // from(str) {
+            //     const self = this
+            //     let res = str
+            //         .replace(/([\-|_\(\)\[\]\{\}\\\/\?\.\,\<\>\'\;\:\"\!\\@\#\$\%\^\|\&\*')])/gi, '$1$1')
+            //         // .replace(//gi, '')
+            //         .split('')
+            //         .map(el => {
+            //             console.log(el, el.length)
+            //             console.log('parse', el)
+            //             return self.cipher[el] || el
+            //         })
+            //         .join('')
+            //     return res
+            // },
         }
 
 
