@@ -803,8 +803,6 @@
 
         Generators['screamcipher'] = {
 
-            disabled: true,
-
             name: 'Scream Cipher',
             description: 'Messages consist of all As, with different letters distinguished using diacritics',
 
@@ -897,20 +895,47 @@
                 return res
             },
 
-            // from(str) {
-            //     const self = this
-            //     let res = str
-            //         .replace(/([\-|_\(\)\[\]\{\}\\\/\?\.\,\<\>\'\;\:\"\!\\@\#\$\%\^\|\&\*')])/gi, '$1$1')
-            //         // .replace(//gi, '')
-            //         .split('')
-            //         .map(el => {
-            //             console.log(el, el.length)
-            //             console.log('parse', el)
-            //             return self.cipher[el] || el
-            //         })
-            //         .join('')
-            //     return res
-            // },
+            from(str) {
+                return str
+                    .replace(/A/gi, 'A')
+                    .replace(/Ȧ/gi, 'B')
+                    .replace(/Ą/gi, 'C')
+                    .replace(/A̱/gi, 'D')
+                    .replace(/Á/gi, 'E')
+                    .replace(/A̮/gi, 'F')
+                    .replace(/A̋/gi, 'G')
+                    .replace(/A̰/gi, 'H')
+                    .replace(/Ả/gi, 'I')
+                    .replace(/A̓/gi, 'J')
+                    .replace(/Ạ/gi, 'K')
+                    .replace(/Ă/gi, 'L')
+                    .replace(/Ǎ/gi, 'M')
+                    .replace(/Â/gi, 'N')
+                    .replace(/Å/gi, 'O')
+                    .replace(/A̯/gi, 'P')
+                    .replace(/A̤/gi, 'Q')
+                    .replace(/Ȃ/gi, 'R')
+                    .replace(/Ã/gi, 'S')
+                    .replace(/Ā/gi, 'T')
+                    .replace(/Ä/gi, 'U')
+                    .replace(/À/gi, 'V')
+                    .replace(/Ȁ/gi, 'W')
+                    .replace(/A̽/gi, 'X')
+                    .replace(/A̦/gi, 'Y')
+                    .replace(/Ⱥ/gi, 'Z')
+                // const self = this
+                // let res = str
+                //     .replace(/([\-|_\(\)\[\]\{\}\\\/\?\.\,\<\>\'\;\:\"\!\\@\#\$\%\^\|\&\*')])/gi, '$1$1')
+                //     // .replace(//gi, '')
+                //     .split('')
+                //     .map(el => {
+                //         console.log(el, el.length)
+                //         console.log('parse', el)
+                //         return self.cipher[el] || el
+                //     })
+                //     .join('')
+                // return res
+            },
         }
 
 
